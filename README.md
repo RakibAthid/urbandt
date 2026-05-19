@@ -179,8 +179,8 @@ authoritative building register), then keep everything else.
 
 If this code or pipeline supports your work, please cite:
 
-> Athid, R. (2026). *Towards a privacy-aware neighbourhood digital twin:
-> integrating energy and ecology indicators for Twekkelerveld, Enschede.*
+> Athid, R. (2026). *Digital Twin for Improvement of the Sustainabilitu of Neighbourhoods through Scenario Planning:
+> A case study in the city of Enschede,the Netherlands.*
 > MSc Thesis, Faculty of Geo-Information Science and Earth Observation (ITC),
 > University of Twente.
 
