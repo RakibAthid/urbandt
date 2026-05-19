@@ -5,7 +5,7 @@ A small, reproducible Python library that turns Dutch open geodata
 into a neighbourhood-scale digital twin dashboard.
 
 This package is the generalised pipeline behind the **Twekkelerveld Digital
-Twin** prototype — an MSc thesis at the Faculty of Geo-Information Science
+Twin** prototype - an MSc thesis at the Faculty of Geo-Information Science
 and Earth Observation (ITC), University of Twente.
 
 > **Status:** research preview, version 0.1.0. The API is stable enough for
