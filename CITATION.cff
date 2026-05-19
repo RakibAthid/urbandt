@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "urbandt: Urban Digital Twin toolkit"
+abstract: >
+  A reproducible Python library that turns Dutch open geodata (BAG, BGT,
+  CBS, Enexis, Zonnedakje, KNMI, 3D BAG / CityJSON, Landsat thermal) into a
+  neighbourhood-scale digital twin dashboard, with built-in privacy modes
+  for local, private, and public sharing. Released alongside the
+  Twekkelerveld MSc thesis at ITC, University of Twente.
+type: software
+authors:
+  - family-names: Athid
+    given-names: Rakib
+    email: rakubunathid@gmail.com
+    affiliation: "Faculty of Geo-Information Science and Earth Observation (ITC), University of Twente"
+version: 0.1.0
+date-released: 2026-05-19
+license: MIT
+repository-code: "https://github.com/RakibAthid/urbandt"
+keywords:
+  - "digital twin"
+  - urban
+  - geospatial
+  - energy
+  - ecology
+  - BAG
+  - Enexis
+  - CesiumJS
+  - "urban heat island"
+  - photovoltaics
+preferred-citation:
+  type: thesis
+  title: "Towards a privacy-aware neighbourhood digital twin: integrating energy and ecology indicators for Twekkelerveld, Enschede"
+  authors:
+    - family-names: Athid
+      given-names: Rakib
+  thesis-type: "MSc thesis"
+  institution:
+    name: "Faculty of Geo-Information Science and Earth Observation (ITC), University of Twente"
+    city: Enschede
+    country: NL
+  year: 2026

@@ -5,12 +5,15 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "urbandt"
 version = "0.1.0"
-description = "Urban Digital Twin toolkit — reproducible energy + ecology indicators for neighbourhood-scale dashboards (Twekkelerveld MSc Thesis, University of Twente / ITC)."
+description = "Urban Digital Twin toolkit: reproducible energy and ecology indicators for neighbourhood-scale dashboards. Released alongside the Twekkelerveld MSc thesis at ITC, University of Twente."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
-  { name = "Rakib", email = "rakib.athid@gmail.com" }
+  { name = "Rakib Athid", email = "rakubunathid@gmail.com" }
+]
+maintainers = [
+  { name = "Rakib Athid", email = "rakubunathid@gmail.com" }
 ]
 keywords = [
   "digital twin", "urban", "geospatial", "energy", "ecology",
@@ -49,9 +52,10 @@ dev = ["pytest>=7", "ruff>=0.1", "pytest-cov>=4"]
 urbandt = "urbandt.cli:main"
 
 [project.urls]
-Homepage   = "https://github.com/rakib-athid/urbandt"
-Repository = "https://github.com/rakib-athid/urbandt"
-Issues     = "https://github.com/rakib-athid/urbandt/issues"
+Homepage      = "https://github.com/RakibAthid/urbandt"
+Repository    = "https://github.com/RakibAthid/urbandt"
+Issues        = "https://github.com/RakibAthid/urbandt/issues"
+Documentation = "https://github.com/RakibAthid/urbandt#readme"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

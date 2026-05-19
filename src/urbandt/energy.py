@@ -75,13 +75,12 @@ class EnergyModule:
     # ------------------------------------------------------------------
     # Step 1 — read Enexis and split electricity vs gas
     # ------------------------------------------------------------------
-    def read_enexis(self, xlsx_path: str | Path) -> dict:
+    def read_enexis(self, xlsx_path) -> dict:
         """Load Enexis xlsx and return totals dict {el_kwh, gas_m3}."""
         df = pd.read_excel(xlsx_path)
         df[self.ENEXIS_COUNT_COL] = pd.to_numeric(
             df[self.ENEXIS_COUNT_COL], errors="coerce"
         )
-        # Enexis sometimes uses comma as decimal separator
         df[self.ENEXIS_USE_COL] = (
             df[self.ENEXIS_USE_COL].astype(str).str.replace(",", ".")
         )
@@ -107,7 +106,7 @@ class EnergyModule:
     # ------------------------------------------------------------------
     # Step 2 — allocate area-share of totals to each building
     # ------------------------------------------------------------------
-    def allocate_demand(self, totals: dict | None = None) -> "EnergyModule":
+    def allocate_demand(self, totals=None) -> "EnergyModule":
         totals = totals or self.totals_
         if not totals:
             raise RuntimeError("Call read_enexis() first or pass totals=")
@@ -125,7 +124,6 @@ class EnergyModule:
         b["co2_gas_kg"] = b["gas_m3"] * config.CO2_KG_PER_M3_GAS
         b["tot_kwh"] = b["el_kwh"] + b["gas_kwh"]
 
-        # EUI baseline
         b["EUI_base_kwh_m2"] = b["tot_kwh"] / b[area_col]
         b["EUI_el_kwh_m2"] = b["el_kwh"] / b[area_col]
         b["EUI_gas_kwh_m2"] = b["gas_kwh"] / b[area_col]
@@ -136,19 +134,31 @@ class EnergyModule:
     # ------------------------------------------------------------------
     # Step 3 — merge Zonnedakje rooftop PV potential
     # ------------------------------------------------------------------
-    def merge_pv(self, pv_gpkg: str | Path) -> "EnergyModule":
+    def merge_pv(self, pv_gpkg) -> "EnergyModule":
         """Merge per-building PV potential from a Zonnedakje GeoPackage."""
         gdf_pv = _io.load_gpkg(pv_gpkg)
         if gdf_pv is None:
             raise FileNotFoundError(f"Could not read PV potential from {pv_gpkg}")
 
-        keep = ["BAG_ID"] + [c for c in self.PV_COLS if c in gdf_pv.columns]
+        # Find the BAG id column (Zonnedakje exports vary in casing)
+        pv_id_col = _io.pick_first_existing(
+            gdf_pv,
+            [self.PV_ID_COL, "BAG_ID", "bag_id", "BAGID", "bagid"],
+        )
+        if pv_id_col is None:
+            raise KeyError(
+                f"PV GeoPackage has no recognisable BAG id column. "
+                f"Tried: BAG_ID, bag_id, BAGID, bagid. "
+                f"Columns found: {list(gdf_pv.columns)}"
+            )
+
+        keep = [pv_id_col] + [c for c in self.PV_COLS if c in gdf_pv.columns]
         df = gdf_pv[keep].copy()
-        # rename to clean names
         df = df.rename(columns=self.PV_COLS)
-        # normalise BAG id to digits-only
-        df["bag_id"] = df["BAG_ID"].apply(_io.normalize_bag_id)
-        df = df.drop(columns=["BAG_ID"]).drop_duplicates(subset=["bag_id"])
+        df["bag_id"] = df[pv_id_col].apply(_io.normalize_bag_id)
+        if pv_id_col != "bag_id":
+            df = df.drop(columns=[pv_id_col])
+        df = df.drop_duplicates(subset=["bag_id"])
 
         # find ID col in buildings
         b = self.area.buildings
@@ -183,7 +193,6 @@ class EnergyModule:
         b["tot_kwh_net_pv"] = b["el_kwh_net_pv"] + b["gas_kwh"]
         b["EUI_net_pv_kwh_m2"] = b["tot_kwh_net_pv"] / b[area_col]
 
-        # PV coverage ratio, capped at 200%
         cov = b["pv_kwh_used"] / b["el_kwh"]
         cov = cov.replace([np.inf, -np.inf], np.nan)
         b["pv_coverage_el"] = cov.clip(lower=0, upper=config.PV_COVERAGE_CAP)
@@ -216,8 +225,8 @@ class EnergyModule:
     # ------------------------------------------------------------------
     def compute_all(
         self,
-        enexis_xlsx: str | Path,
-        pv_gpkg: str | Path,
+        enexis_xlsx,
+        pv_gpkg,
         pv_factor: float = 1.0,
     ) -> "EnergyModule":
         """Run the full energy pipeline end-to-end."""
