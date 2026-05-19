@@ -1,4 +1,4 @@
-# urbandt — Urban Digital Twin toolkit
+# urbandt - Urban Digital Twin toolkit
 
 A small, reproducible Python library that turns Dutch open geodata
 (BAG, BGT, CBS, Enexis, Zonnedakje, KNMI, 3D BAG / CityJSON, Landsat thermal)
